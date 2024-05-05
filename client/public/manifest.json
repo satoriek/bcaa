@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Eventy Zabublej",
+  "name": "App to manage Zabublej events",
   "icons": [
     {
       "src": "favicon.ico",

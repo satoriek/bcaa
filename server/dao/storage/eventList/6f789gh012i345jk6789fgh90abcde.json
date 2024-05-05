@@ -1,11 +1,1 @@
-{
-    "date": "2024-05-11",
-    "time": "16:15",
-    "name": "Company Picnic",
-    "id": "6f789gh012i345jk6789fgh90abcde",
-    "employee": "f6g7h8i9j0a1b2c3d4e5",
-    "location": "Riverside Park",
-    "description": "Annual company picnic and outdoor activities",
-    "type": "event"
-  }
-  
+{"date":"2024-05-11","time":"16:15","name":"Company Picnic","id":"6f789gh012i345jk6789fgh90abcde","location":"Riverside Park","description":"Annual company picnic and outdoor activities","type":"event","employee":"cf0b1cb27518896b2de04145fd8aa5e9"}

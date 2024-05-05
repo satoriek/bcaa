@@ -2,7 +2,7 @@ import { HashRouter as Router, Routes, Route } from "react-router-dom";
 
 import MyEvents from "./myEvents";
 import AllEvents from "./allEvents";
-import { FreeEvents } from "./freeEvents";
+import FreeEvents from "./freeEvents";
 import Layout from "./Layout";
 import UserProvider from "./UserProvider";
 import EventListProvider from "./EventListProvider";

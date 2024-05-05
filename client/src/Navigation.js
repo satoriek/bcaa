@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { UserContext } from "./UserContext";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -12,19 +12,20 @@ import LoginModal from "./LoginModal"; // Import the LoginModal component
 function Navigation() {
   const { userList, loggedInUser, handlerMap } = useContext(UserContext);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const location = useLocation();
 
   return (
     <>
       <Navbar expand="lg" style={{ backgroundColor: "rgba(78,170,169,100)", fontSize: "1.5rem", textAlign: "right" }}>
         <Container>
-          <Navbar.Brand as={Link} to="/" style={{ fontSize: "1.6rem" }}>ZABUBLEJ EVENTY</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/" style={{ fontSize: "1.6rem", color: "white" }}>ZABUBLEJ EVENTY</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link as={Link} to="/freeEvents">Volné akce</Nav.Link>
-              <Nav.Link as={Link} to="/myEvents">Moje akce</Nav.Link>
+              <Nav.Link as={Link} to="/freeEvents" className={`nav-link-custom ${location.pathname === "/freeEvents" ? "font-weight-bold text-white" : ""}`}>Volné akce</Nav.Link>
+              <Nav.Link as={Link} to="/myEvents" className={`nav-link-custom ${location.pathname === "/myEvents" ? "font-weight-bold text-white" : ""}`}>Moje akce</Nav.Link>
               {loggedInUser && loggedInUser.role === "manager" && (
-                <Nav.Link as={Link} to="/">Všechny akce</Nav.Link>
+                <Nav.Link as={Link} to="/" className={`nav-link-custom ${location.pathname === "/" ? "font-weight-bold text-white" : ""}`}>Všechny akce</Nav.Link>
               )}
             </Nav>
             <Navbar.Collapse className="justify-content-end">

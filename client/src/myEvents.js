@@ -5,19 +5,24 @@ import Button from "react-bootstrap/esm/Button.js";
 import EventCard from "./EventCard.js";
 import EventForm from "./EventForm.js";
 import Container from "react-bootstrap/esm/Container.js";
+import EventDetailModal from "./EventDetailModal.js";
 
-function AllEvents() {
+function MyEvents() {
   const { eventList } = useContext(EventListContext);
-  const { loggedInUser } = useContext(UserContext); // Accessing logged-in user from context
+  const { loggedInUser } = useContext(UserContext);
   const [showEventForm, setShowEventForm] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showEventDetails, setShowEventDetails] = useState(false);
 
-  // Condition to check if the user is logged in
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    setShowEventDetails(true);
+  };
+
   const isLoggedIn = loggedInUser !== null;
 
-  // Filtered event list based on user's role
   let filteredEventList = [];
   if (isLoggedIn) {
-    // Filter events assigned to the logged-in user
     filteredEventList = eventList.filter(
       (event) => event.employee === loggedInUser.id
     );
@@ -27,12 +32,25 @@ function AllEvents() {
     <Container>
       <>
         {showEventForm && <EventForm setShowEventForm={setShowEventForm} />}
-        {filteredEventList.map((event) => {
-          return <EventCard key={event.id} event={event} />;
-        })}
+        {showEventDetails && selectedEvent && (
+          <EventDetailModal
+            event={selectedEvent}
+            onHide={() => setShowEventDetails(false)}
+            source="myEvents"
+          />
+        )}
+        {filteredEventList.map((event) => (
+          <Button
+            key={event.id}
+            onClick={() => handleEventClick(event)}
+            style={{ width: "100%", margin: "8px 0", backgroundColor: "transparent", border: "none"}}
+          >
+            <EventCard event={event} />
+          </Button>
+        ))}
       </>
     </Container>
   );
 }
 
-export default AllEvents;
+export default MyEvents;

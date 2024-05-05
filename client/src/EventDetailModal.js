@@ -6,10 +6,9 @@ import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import Icon from "@mdi/react";
 import { mdiLoading } from "@mdi/js";
-import assignEvent from "./assignEvent";
 import { EventListContext } from "./EventListContext.js";
 
-function EventDetailModal({ event, onHide }) {
+function EventDetailModal({ event, onHide, source }) {
   const [showAlert, setShowAlert] = useState(null);
   const isPending = false; // Set to true if you want to show a loading indicator
   const { loggedInUser } = useContext(UserContext);
@@ -46,20 +45,20 @@ function EventDetailModal({ event, onHide }) {
 
         <div>
           <div>Datum: {formattedDate}</div>
-          <div>Čas: </div>
+          <div>Čas: {event.time}</div>
           <div>Lokace: {event.location}</div>
           <div>Kontakt: {event.contact}</div>
           <div>Popis: {event.description}</div>
-          <div>Zaměstnanec: {} </div>
-
-          {/* Add more event properties here */}
+          <div>Zaměstnanec: {event.employee? event.employee : "free" } </div>
         </div>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
           Close
         </Button>
-        <Button variant="primary" onClick={() => handlerMap.handleAssign(event.id, loggedInUser.id)}>Zabrat</Button>
+        {source !== "myEvents" && (
+          <Button variant="primary" onClick={() => handlerMap.handleAssign(event.id, loggedInUser.id)}>Zabrat</Button>
+        )}
       </Modal.Footer>
     </Modal>
   );
