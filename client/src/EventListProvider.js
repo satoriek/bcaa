@@ -121,10 +121,71 @@ function EventListProvider({ children }) {
     }
   }  
 
+  async function handleDelete(eventId) {
+    setEventLoadObject((current) => ({ ...current, state: "pending" }));
+    const response = await fetch(`http://localhost:3000/event/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: eventId }),
+    });
+    const responseJson = await response.json();
+
+    if (response.status < 400) {
+      setEventLoadObject((current) => {
+        const updatedEventList = current.data.filter((event) => event.id !== eventId);
+        return { state: "ready", data: updatedEventList };
+      });
+      return responseJson;
+    } else {
+      setEventLoadObject((current) => ({
+        state: "error",
+        data: current.data,
+        error: responseJson,
+      }));
+      throw new Error(JSON.stringify(responseJson, null, 2));
+    }
+  }
+
+
+
+  async function handleUnassign(eventId) {
+    setEventLoadObject((current) => ({ ...current, state: "pending" }));
+    const response = await fetch(`http://localhost:3000/event/unassign`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ eventId }),
+    });
+    const responseJson = await response.json();
+
+    if (response.status < 400) {
+      setEventLoadObject((current) => {
+        const updatedEventList = current.data.map((event) => {
+          if (event.id === eventId) {
+            return { ...event, employee: null };
+          }
+          return event;
+        });
+        return { state: "ready", data: updatedEventList };
+      });
+      return responseJson;
+    } else {
+      setEventLoadObject((current) => ({
+        state: "error",
+        data: current.data,
+        error: responseJson,
+      }));
+      throw new Error(JSON.stringify(responseJson, null, 2));
+    }
+  }
+
   const value = {
     state: eventLoadObject.state,
     eventList: eventLoadObject.data || [],
-    handlerMap: { handleCreate, handleUpdate, handleAssign },
+    handlerMap: { handleCreate, handleUpdate, handleAssign, handleDelete, handleUnassign },
   };
 
   return (

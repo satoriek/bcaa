@@ -64,6 +64,7 @@ function AllEvents() {
           <EventDetailModal
             event={selectedEvent}
             onHide={() => setShowEventDetails(false)}
+            source = "allEvents"
           />
         )}
         {filteredEventList.map((event) => (

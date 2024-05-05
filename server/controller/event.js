@@ -7,6 +7,7 @@ const CreateAbl = require("../abl/events/createAbl");
 const UpdateAbl = require("../abl/events/updateAbl");
 const DeleteAbl = require("../abl/events/deleteAbl");
 const AssignAbl = require("../abl/events/assignAbl");
+const UnassignAbl = require("../abl/events/unassignAbl");
 
 router.get("/get", (req, res) => {
   GetAbl(req, res);
@@ -30,6 +31,10 @@ router.post("/delete", (req, res) => {
 
 router.post("/assign", (req, res) => {
   AssignAbl(req, res);
+});
+
+router.post("/unassign", (req, res) => {
+  UnassignAbl(req, res);
 });
 
 module.exports = router;

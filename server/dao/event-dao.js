@@ -95,6 +95,17 @@ function assign(eventId, userId) {
   }
 }
 
+function unassign(eventId) {
+  try {
+    const event = get(eventId);
+    if (!event) throw { code: "eventNotFound", message: "Event not found" };
+
+    delete event.employee;
+    update(event);
+  } catch (error) {
+    throw { code: "failedToUnassignEvent", message: error.message };
+  }
+}
 
 module.exports = {
   get,
@@ -103,4 +114,5 @@ module.exports = {
   remove,
   list,
   assign,
+  unassign,
 };
