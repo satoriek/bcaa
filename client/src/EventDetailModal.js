@@ -60,7 +60,7 @@ function EventDetailModal({ event, onHide, source }) {
           <Button variant="primary" onClick={() => {handlerMap.handleAssign(event.id, loggedInUser.id); onHide();}}>Zabrat</Button>
         )}
         {(source === "allEvents" || source === "myEvents") && (
-          <Button variant="danger" onClick={() => {handlerMap.handleDelete(event.id); onHide();}}>Uvolnit</Button>
+          <Button variant="danger" onClick={() => {handlerMap.handleUnassign(event.id); onHide();}}>Uvolnit</Button>
         )}
         {source === "allEvents" && (
           <Button variant="warning" onClick={() => {handlerMap.handleDelete(event.id); onHide();}}>Smazat</Button>

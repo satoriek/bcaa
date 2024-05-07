@@ -12,7 +12,7 @@ function get(eventId) {
     return JSON.parse(fileData);
   } catch (error) {
     if (error.code === "ENOENT") return null;
-    throw { code: "failedToReadEvent", message: error.message };
+    throw new Error("Failed to read event: " + error.message);
   }
 }
 
@@ -25,43 +25,36 @@ function create(event) {
     fs.writeFileSync(filePath, fileData, "utf8");
     return event;
   } catch (error) {
-    throw { code: "failedToCreateEvent", message: error.message };
+    throw new Error("Failed to create event: " + error.message);
   }
 }
-
 
 // Method to update event in a file
 function update(event) {
   try {
     const currentEvent = get(event.id);
-    if (!currentEvent) return null;
-
-    // Delete existing event
-    const filePath = path.join(eventFolderPath, `${event.id}.json`);
-    fs.unlinkSync(filePath);
+    if (!currentEvent) throw new Error("Event not found");
 
     // Save new event with updated parameters
-    const newEvent = { ...currentEvent, ...event };
     const newFilePath = path.join(eventFolderPath, `${event.id}.json`);
-    const fileData = JSON.stringify(newEvent);
+    const fileData = JSON.stringify(event);
     fs.writeFileSync(newFilePath, fileData, "utf8");
 
-    return newEvent;
+    return event;
   } catch (error) {
-    throw { code: "failedToUpdateEvent", message: error.message };
+    throw new Error("Failed to update event: " + error.message);
   }
 }
-
 
 // Method to remove an event from a file
 function remove(eventId) {
   try {
     const filePath = path.join(eventFolderPath, `${eventId}.json`);
     fs.unlinkSync(filePath);
-    return {};
   } catch (error) {
-    if (error.code === "ENOENT") return {};
-    throw { code: "failedToRemoveEvent", message: error.message };
+    if (error.code !== "ENOENT") {
+      throw new Error("Failed to remove event: " + error.message);
+    }
   }
 }
 
@@ -79,31 +72,44 @@ function list() {
     eventList.sort((a, b) => new Date(a.date) - new Date(b.date));
     return eventList;
   } catch (error) {
-    throw { code: "failedToListEvents", message: error.message };
+    throw new Error("Failed to list events: " + error.message);
   }
 }
 
 function assign(eventId, userId) {
   try {
     const event = get(eventId);
-    if (!event) throw { code: "eventNotFound", message: "Event not found" };
+    if (!event) throw new Error("Event not found");
 
     event.employee = userId;
     update(event);
+    return event;
   } catch (error) {
-    throw { code: "failedToAssignEvent", message: error.message };
+    throw new Error("Failed to assign event: " + error.message);
   }
 }
 
 function unassign(eventId) {
+  console.log("Unassigning event", eventId);
   try {
     const event = get(eventId);
-    if (!event) throw { code: "eventNotFound", message: "Event not found" };
+    if (!event) throw new Error("Event not found");
 
+    // Check if event has an employee assigned
+    if (!event.employee) {
+      throw new Error("No employee assigned to this event");
+    }
+
+    // Unassign employee by deleting the employee property
     delete event.employee;
+
+    // Update the event
     update(event);
+
+    // Return the updated event
+    return event;
   } catch (error) {
-    throw { code: "failedToUnassignEvent", message: error.message };
+    throw new Error("Failed to unassign event: " + error.message);
   }
 }
 
